@@ -1,56 +1,38 @@
-# api_final
+# Yatube
 
-Yatube — это учебный проект, в ходе реализации которого изучались Django REST Framework (DRF) и архитектура REST API.
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/Django-092E20?logo=django&logoColor=white)
+![Django REST Framework](https://img.shields.io/badge/Django_REST_Framework-922E20)
+![Djoser](https://img.shields.io/badge/Djoser-4B32C3)
+
 Все блоги чем-то похожи друг на друга: любой блог-сервис предполагает возможность зарегистрироваться, создать, отредактировать или удалить собственный пост, прокомментировать пост другого автора и подписаться на него.
 Через  интерфейс Yatube может работать мобильное приложение или чат-бот; данные через этот API можно передавать и на фронтенд.
 
-### Как запустить проект:
 
-Клонировать репозиторий и перейти в него в командной строке:
+---
 
-```
-git clone https://github.com/KuznetcovIvan/api_final_yatube.git
-```
+### Установка и запуск проекта
 
-```
-cd api_final_yatube
-```
+1. Клонируйте проект с репозитория `git clone https://github.com/KuznetcovIvan/api_final_yatube.git`
+2. Перейдите в директорию с проектом `cd api_final_yatube`
+3. Создайте виртуальное окружение в директории проекта:
+   `python -m venv venv`,
+   и активируйте его:
+   `venv\Scripts\activate` (для Linux/macOS: `source venv/bin/activate`)
+4. Установите зависимости:
+   `pip install -r requirements.txt`
+5. Создайте файл `.env` в корне проекта и задайте переменные окружения.
+   Пример содержимого указан в файле `.env.example`.
 
-Cоздать и активировать виртуальное окружение:
+6. Выполните миграции `python manage.py migrate`
 
-```
-python3 -m venv env
-```
+7. Запустите проект `python manage.py runserver`
 
-```
-source env/bin/activate
-```
+Когда вы запустите проект, по адресу  [http://127.0.0.1:8000/redoc/](http://127.0.0.1:8000/redoc/) будет доступна документация для API в формате Redoc. где подробно описано, как работает API.
 
-Установить зависимости из файла requirements.txt:
+---
 
-```
-python3 -m pip install --upgrade pip
-```
-
-```
-pip install -r requirements.txt
-```
-
-Выполнить миграции:
-
-```
-python3 manage.py migrate
-```
-
-Запустить проект:
-
-```
-python3 manage.py runserver
-```
-
-Когда вы запустите проект, по адресу  http://127.0.0.1:8000/redoc/ будет доступна документация для API Yatube. В документации подробно описано, как работает API. Документация представлена в формате Redoc.
-
-### Основные  запросы к API Yatube:
+### Основные  запросы к API:
 
 1. [Публикации](#1-публикации)
    - [1.1. Получение списка публикаций](#11-получение-списка-публикаций)
@@ -405,3 +387,16 @@ python3 manage.py runserver
 
 **Ответ:**  
 Статус `200 OK`, если токен валиден.
+
+---
+
+### Технологический стек
+
+- Python
+- Django
+- Django REST Framework
+- Djoser
+
+---
+
+### Автор: [Иван Кузнецов](https://github.com/KuznetcovIvan)

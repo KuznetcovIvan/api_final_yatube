@@ -1,29 +1,19 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions, mixins, filters
-from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from posts.models import Group, Post, User
+from posts.models import Group, Post
+from .permissions import IsAuthorOrReadOnly
 from .serializers import (CommentSerializers, FollowSerializers,
                           GroupSerializers, PostSerializers)
 
 
-class BaseViewSet(viewsets.ModelViewSet):
-    def perform_update(self, serializer):
-        if serializer.instance.author != self.request.user:
-            raise PermissionDenied('Изменение чужого контента запрещено!')
-        super().perform_update(serializer)
-
-    def perform_destroy(self, instance):
-        if instance.author != self.request.user:
-            raise PermissionDenied('Удаление чужого контента запрещено!')
-        super().perform_destroy(instance)
-
-
-class PostViewSet(BaseViewSet):
+class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializers
     pagination_class = LimitOffsetPagination
+    permission_classes = (IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -34,8 +24,9 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GroupSerializers
 
 
-class CommentViewSet(BaseViewSet):
+class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializers
+    permission_classes = (IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly)
 
     def get_post(self):
         return get_object_or_404(Post, id=self.kwargs['post_id'])
@@ -59,13 +50,4 @@ class FollowViewSet(mixins.ListModelMixin,
         return self.request.user.following.all()
 
     def perform_create(self, serializer):
-        following_user = get_object_or_404(
-            User, username=self.request.data['following'])
-        if self.request.user == following_user:
-            raise ValidationError(
-                {'error': 'Нельзя подписаться на самого себя!'})
-        if self.request.user.following.filter(
-                following=following_user).exists():
-            raise ValidationError(
-                {'error': 'Вы уже подписаны на этого пользователя!'})
-        serializer.save(user=self.request.user, following=following_user)
+        serializer.save(user=self.request.user)
